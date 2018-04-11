@@ -28,16 +28,16 @@ public class JianyuBiddWdCrawl {
 		System.setProperty("webdriver.gecko.driver", "./geckodriver.exe");
 		FirefoxDriver wd = new FirefoxDriver();
 		new JianyuBiddWdCrawl(1).run(wd);
-		new JianyuBiddWdCrawl(2).run(wd);
-		new JianyuBiddWdCrawl(3).run(wd);
+//		new JianyuBiddWdCrawl(2).run(wd);
+//		new JianyuBiddWdCrawl(3).run(wd);
 	}
 
 	public void run(RemoteWebDriver wd) {
 		MysqlDataSource dataSource = new MysqlDataSource();
 		dataSource.setUrl(
-				"jdbc:mysql://biaoshuking.mysql.rds.aliyuncs.com:3306/hngp?useUnicode=true&characterEncoding=utf-8");
-		dataSource.setUser("hngp");
-		dataSource.setPassword("hngp123");
+				"jdbc:mysql://localhost:3306/guotest?useUnicode=true&characterEncoding=utf-8");
+		dataSource.setUser("root");
+		dataSource.setPassword("root");
 		try (JSONObjectStoreMySQLDao dao = new JSONObjectStoreMySQLDao(dataSource, "tab_raw_bidd", "url")) {
 			BasicSite site = new BasicSite(wd);
 			site.setUpdate(false);
@@ -85,10 +85,10 @@ public class JianyuBiddWdCrawl {
 					if (Boolean.FALSE == chainHandler.apply(task, site)) {
 						break;
 					}
-					int sleeptime = RandomUtils.nextInt(500, 1000);
+					int sleeptime = RandomUtils.nextInt(5, 10);
 					SleepUtils.sleep(sleeptime);
 				}
-				int sleeptime = RandomUtils.nextInt(10 * 1000, 30 * 1000);
+				int sleeptime = RandomUtils.nextInt(10 ,30 );
 				System.out.println("sleep time:" + sleeptime);
 				SleepUtils.sleep(sleeptime);
 			}

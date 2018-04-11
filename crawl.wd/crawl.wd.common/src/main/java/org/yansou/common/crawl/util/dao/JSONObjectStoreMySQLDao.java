@@ -145,6 +145,7 @@ public class JSONObjectStoreMySQLDao implements AutoCloseable {
                 queryConn = dataSource.getConnection();
             }
             IDEntry ent = qr.query( queryConn, querySql, new BeanHandler<>( IDEntry.class ), rowkey );
+
             if (null != ent) {
                 return ent;
             }
@@ -255,28 +256,42 @@ public class JSONObjectStoreMySQLDao implements AutoCloseable {
                 writeConn = dataSource.getConnection();
             }
             IDEntry ent = getId( json.getString( rowkey ) );
+            System.out.println("ENTRYid:"+ent.getId()+"EntRystatus:"+ent.getStatus()+"real ROWKEY:"+json.getString( rowkey ));
+            System.out.println("rowkeyID:"+rowkey);
             if (null != ent && ent.getStatus() != 0) {
                 // 人工改动过的记录,不修改。
                 Logs.info( "skip save:{}" + ent.getId() );
                 return;
             }
             if (null == ent) {
+
                 daoCall = getInsCall( json );
+
             } else {
+
                 long id = ent.getId();
                 json.put( "id", id );
                 List<String> fieldNames = getNotUpdateFieldName( id );
                 daoCall = getUpdate( json, fieldNames );
             }
+            System.out.println("finalsql:"+daoCall.getSql());
+
+
+
             qr.update( writeConn, daoCall.getSql(), argsConversion( daoCall.getArgs() ) );
+
+
             if (StringUtils.startsWithIgnoreCase( daoCall.getSql(), "UPDATE" )) {
                 updCount.incrementAndGet();
                 allUpdCount.incrementAndGet();
+                System.out.println("------update----");
             } else if (StringUtils.startsWithIgnoreCase( daoCall.getSql(), "INSERT" )) {
                 insCount.incrementAndGet();
                 allInsCount.incrementAndGet();
+                System.out.println("****insert*****");
             } else {
                 errCount.incrementAndGet();
+                System.out.println("33333333");
             }
         } catch (Exception e) {
             DbUtils.closeQuietly( writeConn );

@@ -57,5 +57,11 @@
             <artifactId>crawl.wd.core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            2.    <groupId>org.quartz-scheduler</groupId>
+            3.    <artifactId>quartz</artifactId>
+            4.    <version>1.8.4</version>
+            5.</dependency>
+
     </dependencies>
 </project>
